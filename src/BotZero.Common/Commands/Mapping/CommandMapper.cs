@@ -63,7 +63,7 @@ public abstract class CommandMapper : CommandBase
                     throw new NotSupportedException($"Parameter without name is not supported.");
                 }
 
-                var pa = p.GetCustomAttributeImplementation<IParameterAttribute>();
+                var pa = GetCustomAttributeImplementation<IParameterAttribute>(p);
                 if (pa != null)
                 {
                     var parameter = pa.GetParameter(p.Name);
@@ -179,5 +179,12 @@ public abstract class CommandMapper : CommandBase
                 yield return (callback, new ActionAttribute(""));
             }
         }
+    }
+
+    public static T? GetCustomAttributeImplementation<T>(ParameterInfo info) where T : class
+    {
+        return info
+            .GetCustomAttributes(true)
+            .FirstOrDefault(x => x.GetType().IsAssignableTo(typeof(T))) as T;
     }
 }

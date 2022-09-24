@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using BotZero.Common.Slack;
+using Microsoft.Extensions.Logging;
 using Slack.NetStandard;
 using Slack.NetStandard.RequestHandler;
 

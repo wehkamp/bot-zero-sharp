@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using BotZero.Common.Slack;
+using Mapster;
 using MarkdownDeep;
 using Slack.NetStandard;
 using Slack.NetStandard.Messages.Blocks;

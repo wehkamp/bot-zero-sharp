@@ -1,4 +1,5 @@
-﻿using Slack.NetStandard;
+﻿using BotZero.Common.Slack;
+using Slack.NetStandard;
 using Slack.NetStandard.RequestHandler;
 
 namespace BotZero.Common;

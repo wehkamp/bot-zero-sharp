@@ -2,6 +2,7 @@
 using BotZero.Common.Commands;
 using BotZero.Common.Commands.Mapping.Attributes;
 using BotZero.Common.Messaging;
+using BotZero.Common.Slack;
 using Slack.NetStandard;
 using System.Reflection;
 
