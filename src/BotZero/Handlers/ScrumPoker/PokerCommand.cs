@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 namespace BotZero.Handlers.ScrumPoker;
 
-[Help("poker - start a planning poker", "poker {topic} - start a planning poker on the specified topic.")]
+[Help("poker - start a planning poker", "poker `{topic}` - start a planning poker on the specified topic.")]
 public class PokerCommand : InteractiveCommandMapper
 {
     private readonly static ConcurrentDictionary<string, Vote> _votes = new ConcurrentDictionary<string, Vote>();
