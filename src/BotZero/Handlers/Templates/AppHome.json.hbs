@@ -1,0 +1,59 @@
+﻿{
+  "type": "home",
+  "callback_id": "home",
+  "title": {
+    "type": "plain_text",
+    "text": "Bot Zero (Sharp)"
+  },
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "Bot Zero (Sharp)"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": ":robot_face: Hi, I can chat with you in the *Messages* tab. If you have any questions, please ask one of my admins.\n\n"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "plain_text",
+        "text": "   "
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "input",
+      "dispatch_action": true,
+      "element": {
+        "type": "plain_text_input",
+        "action_id": "query",
+        "placeholder": {
+          "type": "plain_text",
+          "text": "Filter help..."
+        },
+        "initial_value": "{{query}}"
+      },
+      "label": {
+        "type": "plain_text",
+        "text": "Search what I can do:",
+        "emoji": true
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "{{help}}"
+      }
+    }
+  ]
+}

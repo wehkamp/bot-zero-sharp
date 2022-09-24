@@ -1,0 +1,364 @@
+﻿{
+	"blocks": [
+{{#ifEq Stage "Start"}}
+		{
+			"type": "input",
+			"optional": false,
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "topic",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "JIRA ticket ID or name*"
+				},
+				"focus_on_load":true
+			},
+			"label": {
+				"type": "plain_text",
+				"text": ":black_joker: Topic of new vote*"
+			}
+		},
+		{
+			"type": "actions",
+			"block_id": "poker-start-actions",
+			"elements": [
+				{
+					"type": "button",
+					"action_id": "start",
+					"text": {
+						"type": "plain_text",
+						"text": "start"
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "stop",
+					"text": {
+						"type": "plain_text",
+						"text": "cancel"
+					}
+				}
+			]
+		},
+{{/ifEq}}
+{{#ifEq Stage "Voting"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: *Voting on:* {{Topic}}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "```{{Board}}```"
+			}
+		},
+		{
+			"type": "actions",
+			"block_id": "player-vote",
+			"elements": [
+				{
+					"type": "button",
+					"value": "1",
+					"text": {
+						"type": "plain_text",
+						"text": "1"
+					}
+				},
+				{
+					"type": "button",
+					"value": "2",
+					"text": {
+						"type": "plain_text",
+						"text": "2"
+					}
+				},
+				{
+					"type": "button",
+					"value": "3",
+					"text": {
+						"type": "plain_text",
+						"text": "3"
+					}
+				},
+				{
+					"type": "button",
+					"value": "5",
+					"text": {
+						"type": "plain_text",
+						"text": "5"
+					}
+				},
+				{
+					"type": "button",
+					"value": "8",
+					"text": {
+						"type": "plain_text",
+						"text": "8"
+					}
+				},
+				{
+					"type": "button",
+					"value": "13",
+					"text": {
+						"type": "plain_text",
+						"text": "13"
+					}
+				},
+				{
+					"type": "button",
+					"value": "21",
+					"text": {
+						"type": "plain_text",
+						"text": "21"
+					}
+				},
+				{
+					"type": "button",
+					"value": "34",
+					"text": {
+						"type": "plain_text",
+						"text": "34"
+					}
+				},
+				{
+					"type": "button",
+					"value": "55",
+					"text": {
+						"type": "plain_text",
+						"text": "55"
+					}
+				},
+				{
+					"type": "button",
+					"value": "☕",
+					"text": {
+						"type": "plain_text",
+						"text": "☕"
+					}
+				},
+				{
+					"type": "button",
+					"value": "♾️",
+					"text": {
+						"type": "plain_text",
+						"text": "♾️"
+					}
+				}
+			]
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"action_id": "reveal",
+					"text": {
+						"type": "plain_text",
+						"text": "reveal"
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "stop",
+					"text": {
+						"type": "plain_text",
+						"text": "stop"
+					}
+				}
+			]
+		},
+{{/ifEq}}
+{{#ifEq Stage "Consensus"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: *Vote completed:* {{Topic}}"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "```{{Board}}```\n\nConsensus:"
+			}
+		},
+		{
+			"type": "actions",
+			"block_id": "consensus-vote",
+			"elements": [
+				{
+					"type": "button",
+					"value": "1",
+					"text": {
+						"type": "plain_text",
+						"text": "1"
+					}
+				},
+				{
+					"type": "button",
+					"value": "2",
+					"text": {
+						"type": "plain_text",
+						"text": "2"
+					}
+				},
+				{
+					"type": "button",
+					"value": "3",
+					"text": {
+						"type": "plain_text",
+						"text": "3"
+					}
+				},
+				{
+					"type": "button",
+					"value": "5",
+					"text": {
+						"type": "plain_text",
+						"text": "5"
+					}
+				},
+				{
+					"type": "button",
+					"value": "8",
+					"text": {
+						"type": "plain_text",
+						"text": "8"
+					}
+				},
+				{
+					"type": "button",
+					"value": "13",
+					"text": {
+						"type": "plain_text",
+						"text": "13"
+					}
+				},
+				{
+					"type": "button",
+					"value": "21",
+					"text": {
+						"type": "plain_text",
+						"text": "21"
+					}
+				},
+				{
+					"type": "button",
+					"value": "34",
+					"text": {
+						"type": "plain_text",
+						"text": "34"
+					}
+				},
+				{
+					"type": "button",
+					"value": "55",
+					"text": {
+						"type": "plain_text",
+						"text": "55"
+					}
+				},
+				{
+					"type": "button",
+					"value": "☕",
+					"text": {
+						"type": "plain_text",
+						"text": "☕"
+					}
+				},
+				{
+					"type": "button",
+					"value": "♾️",
+					"text": {
+						"type": "plain_text",
+						"text": "♾️"
+					}
+				}
+			]
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"action_id": "poker_again",
+					"text": {
+						"type": "plain_text",
+						"text": "poker again"
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "stop",
+					"text": {
+						"type": "plain_text",
+						"text": "stop"
+					}
+				}
+			]
+		},
+{{/ifEq}}
+{{#ifEq Stage "Results"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: *Voting result:* {{Topic}}; *{{Points}}* points"
+			}
+		},
+		{
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"action_id": "new",
+					"text": {
+						"type": "plain_text",
+						"text": "new"
+					}
+				},
+				{
+					"type": "button",
+					"action_id": "finish",
+					"text": {
+						"type": "plain_text",
+						"text": "ready"
+					}
+				}
+			]
+		},
+{{/ifEq}}
+{{#ifEq Stage "Finished"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: *Voting result:* {{Topic}}; *{{Points}}* points"
+			}
+		},
+{{/ifEq}}
+{{#ifEq Stage "Stopped"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: The vote on '{{Topic}}' was stopped."
+			}
+		},
+{{/ifEq}}
+{{#ifEq Stage "Cancelled"}}
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":black_joker: The vote was cancelled."
+			}
+		}
+{{/ifEq}}
+	]
+}
