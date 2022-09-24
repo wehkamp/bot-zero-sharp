@@ -1,5 +1,6 @@
 ﻿using BotZero.Commands;
 using BotZero.Common;
+using BotZero.Common.Slack;
 using BotZero.Common.Templating;
 using Slack.NetStandard;
 using Slack.NetStandard.EventsApi;
@@ -44,20 +45,20 @@ public class AppHome : SlackRequestHandlerBase
     {
         if (context.Interaction is BlockActionsPayload bap)
         {
-            var query = bap.View.State.GetValue("query")?.Value;
-            await Show(query, viewId: bap.View.ID);
+            var query = bap.View?.State.GetValue("query")?.Value;
+            await Show(query, viewId: bap.View?.ID, bap.User.ID);
         }
         else if (
             context.Event is EventCallback ecb &&
             ecb.Event is AppHomeOpened evt &&
             evt.Tab == "home")
         {
-            string? query = evt.View.State.GetValue("query")?.Value;
-            await Show(query, evt.View.ID, evt.User);
+            string? query = evt.View?.State.GetValue("query")?.Value;
+            await Show(query, evt.View?.ID, evt.User);
         }
     }
 
-    protected async Task Show(string? query = null, string? viewId = null, string? user = null)
+    protected async Task Show(string? query = null, string? viewId = null, string? user_id = null)
     {
         var data = new
         {
@@ -73,7 +74,7 @@ public class AppHome : SlackRequestHandlerBase
         }
         else
         {
-            await Client.MakeJsonCall("views.publish", new { user, view });
+            await Client.MakeJsonCall("views.publish", new { user_id, view });
         }
     }
 }
