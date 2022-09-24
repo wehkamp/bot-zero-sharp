@@ -18,8 +18,9 @@ public class ActionContext : CommandContext
         if (context.Interaction is BlockActionsPayload bap)
         {
             Timestamp = bap.Message?.Timestamp;
-            ChannelId = bap.Channel.ID;
+            ChannelId = bap.Channel?.ID ?? bap.User.ID;
             UserId = bap.User.ID;
+            IsDirectMessage = ChannelId == UserId;
             User = new SlackUser
             {
                 Email = bap.User.Email,
