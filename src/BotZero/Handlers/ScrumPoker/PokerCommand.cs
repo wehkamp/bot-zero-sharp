@@ -1,7 +1,7 @@
-﻿using BotZero.Common;
-using BotZero.Common.Commands.Mapping;
+﻿using BotZero.Common.Commands.Mapping;
 using BotZero.Common.Commands.Mapping.Attributes;
 using BotZero.Common.Commands.Mapping.Parameters;
+using BotZero.Common.Slack;
 using BotZero.Common.Templating;
 using Newtonsoft.Json;
 using Slack.NetStandard;
