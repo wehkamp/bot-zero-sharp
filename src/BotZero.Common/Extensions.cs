@@ -109,7 +109,9 @@ public static class Extensions
             var commandHandler = services.GetService<CommandHandler>();
             if (commandHandler != null)
             {
-                handlers.Add(commandHandler);
+                // make sure the command handler is executed first,
+                // this helps to display errors in the UI
+                handlers.Insert(0, commandHandler);
             }
 
             return new SlackRequestHandlerLocator(handlers.ToArray());

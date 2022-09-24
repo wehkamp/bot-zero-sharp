@@ -1,4 +1,5 @@
 ﻿using BotZero.Commands;
+using BotZero.Common.Commands.Mapping;
 using BotZero.Common.Slack;
 using Microsoft.Extensions.Logging;
 using Slack.NetStandard;
@@ -83,6 +84,29 @@ public sealed class CommandHandler : ISlackRequestHandler<object?>
             }
         }
 
+        foreach (var command in _commands)
+        {
+            if (command is ISlackRequestHandler<object?> srh)
+            {
+                try
+                {
+                    if (srh.CanHandle(context))
+                    {
+                        var task = srh.Handle(context);
+                        task.Wait();
+                        return true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    var ac = new ActionContext(context);
+                    var task = HandleError(ac, command, ex);
+                    task.Wait();
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -105,22 +129,27 @@ public sealed class CommandHandler : ISlackRequestHandler<object?>
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error executing command: {context.Message}");
-
-                var err = ex.Message.Contains('\n') ? $"```{ex.Message}```" : $"`{ex.Message}`";
-
-                var msg = $"Something went wrong! All I got was: {err} from `{command.GetType().FullName}` :scream:";
-
-                if (context.IsDirectMessage)
-                {
-                    msg = $"<@{context.UserId}>, " + msg;
-                }
-
-                await _client.Chat.PostMarkdownMessage(context.ChannelId, msg);
+                await HandleError(context, command, ex);
                 return true;
             }
         }
 
         return false;
+    }
+
+    private async Task HandleError(CommandContext context, ICommand command, Exception ex)
+    {
+        _logger.LogError(ex, $"Error executing command: {context.Message}");
+
+        var err = ex.Message.Contains('\n') ? $"```{ex.Message}```" : $"`{ex.Message}`";
+
+        var msg = $"Something went wrong! All I got was: {err} from `{command.GetType().FullName}` :scream:";
+
+        if (context.IsDirectMessage)
+        {
+            msg = $"<@{context.UserId}>, " + msg;
+        }
+
+        await _client.Chat.PostMarkdownMessage(context.ChannelId, msg);
     }
 }
