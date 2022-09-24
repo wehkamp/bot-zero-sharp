@@ -13,12 +13,13 @@ namespace BotZero.Common;
 /// <summary>
 /// Extension methods.
 /// </summary>
-public static class Extensions
+public static class DependencyInjectionExtensions
 {
     /// <summary>
     /// Scans the calling assembly to search ICommand implementations and registers them into the DI collection.
     /// Will also register the HelpCommand and the CommandHandler.
     /// </summary>
+    /// <returns>The DI collection for chaining.</returns>
     public static IServiceCollection AddCommands(this IServiceCollection provider)
     {
         return provider.AddCommands(Assembly.GetCallingAssembly());
@@ -74,9 +75,11 @@ public static class Extensions
     /// Scans the calling assembly to search ISimpleSlackRequestHandler implementations and registers them into the DI collection.
     /// Will also register the HelpCommand and the CommandHandler.
     /// </summary>
-    public static IServiceCollection AddSlackRequestHandlers(this IServiceCollection provider)
+    /// <param name="skipCommands"><c>True</c> if commands should be skipped. Commands implementing a handler, can be executed by the CommandHandler. Skipping them will prevent double checking by the pipeline.</param>
+    /// <returns>The DI collection for chaining.</returns>
+    public static IServiceCollection AddSlackRequestHandlers(this IServiceCollection provider, bool skipCommands)
     {
-        return provider.AddSlackRequestHandlers(Assembly.GetCallingAssembly());
+        return provider.AddSlackRequestHandlers(skipCommands, Assembly.GetCallingAssembly());
     }
 
     /// <summary>
@@ -84,13 +87,15 @@ public static class Extensions
     /// Will also register the HelpCommand and the CommandHandler.
     /// </summary>
     /// <param name="provider">The provider.</param>
+    /// <param name="skipCommands"><c>True</c> if commands should be skipped. Commands implementing a handler, can be executed by the CommandHandler. Skipping them will prevent double checking by the pipeline.</param>
     /// <param name="assemblies">The assemblies.</param>
     /// <returns>The DI collection for chaining.</returns>
-    public static IServiceCollection AddSlackRequestHandlers(this IServiceCollection provider, params Assembly[] assemblies)
+    public static IServiceCollection AddSlackRequestHandlers(this IServiceCollection provider, bool skipCommands, params Assembly[] assemblies)
     {
         var types = assemblies
             .SelectMany(x => x.GetTypes())
             .Where(x => !x.IsAbstract && x.IsAssignableTo(typeof(ISlackRequestHandler<object?>)))
+            .Where(x => !skipCommands || !x.IsAssignableTo(typeof(ICommand)))
             .ToList();
 
         foreach (var type in types)
@@ -147,7 +152,7 @@ public static class Extensions
             })
             .AddTransient<SlackProfileService>()
             .AddCommands(assemblies)
-            .AddSlackRequestHandlers(assemblies)
+            .AddSlackRequestHandlers(true, assemblies)
             .AddSingleton(System.Threading.Channels.Channel.CreateUnbounded<Envelope>())
             .AddHostedService<SocketModeService>()
             .AddHostedService<ChatBot>();

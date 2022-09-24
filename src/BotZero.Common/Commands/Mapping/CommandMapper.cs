@@ -8,8 +8,6 @@ using System.Reflection;
 
 namespace BotZero.Common.Commands.Mapping;
 
-
-
 /// <summary>
 /// Command mapper that uses attributes to automatically map commands and parameters into a tool.
 /// </summary>
