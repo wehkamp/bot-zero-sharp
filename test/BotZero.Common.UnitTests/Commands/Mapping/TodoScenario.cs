@@ -86,18 +86,6 @@ public class TodoScenario
     }
 
     [Fact]
-    public async Task ListUsingDefaultAlias()
-    {
-        var test = new TodoTestTool();
-        var context = new ActionContext
-        {
-            Message = "todo"
-        };
-        await test.tool.Process(context);
-        test.lastInvoked.Should().Be("list", "empty alias for list");
-    }
-
-    [Fact]
     public async Task ListUsingAlias()
     {
         var test = new TodoTestTool();
@@ -132,45 +120,5 @@ public class TodoScenario
         await test.tool.Process(context);
         test.lastInvoked.Should().Be("add", "named remove command");
         test.lastInvokedContext?.Values["item"].Should().Be("remove eieren");
-    }
-
-    [Fact]
-    public async Task AddWithoutParameterShouldFail()
-    {
-        var test = new TodoTestTool();
-        var context = new ActionContext
-        {
-            Message = "todo add"
-        };
-        await test.tool.Process(context);
-        test.lastInvoked.Should().BeNull("Add without parameters should not be invoked.");
-        test.lastInvokedContext.Should().BeNull("Add without parameters should not be invoked.");
-    }
-
-    [Fact]
-    public async Task RemoveWithoutParameterShouldFail()
-    {
-        var test = new TodoTestTool();
-        var context = new ActionContext
-        {
-            Message = "todo remove"
-        };
-        await test.tool.Process(context);
-        test.lastInvoked.Should().BeNull("Remove without parameters should not be invoked.");
-        test.lastInvokedContext.Should().BeNull("Remove without parameters should not be invoked.");
-    }
-
-    [Fact]
-    public async Task RemoveWithAliasAndWithoutParameterShouldFail()
-    {
-        var test = new TodoTestTool();
-        var context = new ActionContext
-        {
-            Message = "todo rm"
-        };
-        await test.tool.Process(context);
-        test.lastInvoked.Should().BeNull();
-        test.lastInvoked.Should().BeNull("Remove alias without parameters should not be invoked.");
-        test.lastInvokedContext.Should().BeNull("Remove alias without parameters should not be invoked.");
     }
 }
