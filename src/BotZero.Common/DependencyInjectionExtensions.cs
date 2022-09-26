@@ -137,7 +137,7 @@ public static class DependencyInjectionExtensions
     }
 
     /// <summary>
-    /// Adds the Chat Bot to dependecy injection. The assemblies scanned
+    /// Adds the Chat Bot to dependecy injection. The assemblies are scanned
     /// for ICommand and IRequestHandler implementations.
     /// </summary>
     /// <param name="provider">The provider.</param>
@@ -157,10 +157,4 @@ public static class DependencyInjectionExtensions
             .AddHostedService<SocketModeService>()
             .AddHostedService<ChatBot>();
     }
-
-   
-
-   
-
 }
-
