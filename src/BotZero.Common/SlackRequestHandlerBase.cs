@@ -15,15 +15,9 @@ public abstract class SlackRequestHandlerBase : ISlackRequestHandler<object?>
 
     public SlackWebApiClient Client { get; }
 
-    public abstract bool CanHandle(SlackContext context);
+    protected abstract bool CanHandle(SlackContext context);
 
-    public abstract Task Handle(SlackContext context);
-
-    async Task<object?> ISlackRequestHandler<object?>.Handle(SlackContext context)
-    {
-        await Handle(context);
-        return null;
-    }
+    protected abstract Task Handle(SlackContext context);
 
     /// <summary>
     /// Gets the UserId of the bot user.
@@ -39,5 +33,16 @@ public abstract class SlackRequestHandlerBase : ISlackRequestHandler<object?>
         }
 
         return _botUserId;
+    }
+
+    bool ISlackRequestHandler<object?>.CanHandle(SlackContext context)
+    {
+        return CanHandle(context);
+    }
+
+    async Task<object?> ISlackRequestHandler<object?>.Handle(SlackContext context)
+    {
+        await Handle(context);
+        return null;
     }
 }
