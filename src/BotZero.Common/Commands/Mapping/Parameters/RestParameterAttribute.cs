@@ -5,7 +5,7 @@ namespace BotZero.Common.Commands.Mapping.Parameters;
 [AttributeUsage(AttributeTargets.Parameter)]
 public class RestParameterAttribute : ParameterAttributeBase
 {
-    public RestParameterAttribute(bool isOptional = true) => IsOptional = isOptional;
+    public RestParameterAttribute(bool isOptional = false) => IsOptional = isOptional;
 
     protected bool IsOptional { get; }
 
