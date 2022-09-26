@@ -24,7 +24,7 @@ public class AppHome : SlackRequestHandlerBase
         _generator = generator ?? throw new ArgumentNullException(nameof(generator));
     }
 
-    public override bool CanHandle(SlackContext context)
+    protected override bool CanHandle(SlackContext context)
     {
         if (context.Interaction is BlockActionsPayload bap)
         {
@@ -41,40 +41,27 @@ public class AppHome : SlackRequestHandlerBase
         return false;
     }
 
-    public async override Task Handle(SlackContext context)
+    protected async override Task Handle(SlackContext context)
     {
-        if (context.Interaction is BlockActionsPayload bap)
-        {
-            var query = bap.View?.State.GetValue("query")?.Value;
-            await Show(query, viewId: bap.View?.ID, bap.User.ID);
-        }
-        else if (
-            context.Event is EventCallback ecb &&
-            ecb.Event is AppHomeOpened evt &&
-            evt.Tab == "home")
-        {
-            string? query = evt.View?.State.GetValue("query")?.Value;
-            await Show(query, evt.View?.ID, evt.User);
-        }
-    }
+        var bap = context.Interaction as BlockActionsPayload;
+        var evt = (context.Event as EventCallback)?.Event as AppHomeOpened;
 
-    protected async Task Show(string? query = null, string? viewId = null, string? user_id = null)
-    {
+        var view = bap?.View ?? evt?.View;
+        var userId = bap?.User.ID ?? evt?.User;
+        var query = view?.State.GetValue("query")?.Value;
+
         var data = new
         {
             query,
             help = await _helpCommand.QueryHelp(query)
         };
 
-        var view = _generator.ParseWithManifestResource("BotZero.Handlers.Templates.AppHome.json.hbs", data);
+        var obj = _generator.ParseWithManifestResourceToObject("BotZero.Handlers.Templates.AppHome.json.hbs", data);
+        var isNew = view == null;
+        var action = isNew ? "views.publish" : "views.update";
 
-        if (viewId != null)
-        {
-            await Client.MakeJsonCall("views.update", new { view_id = viewId, view });
-        }
-        else
-        {
-            await Client.MakeJsonCall("views.publish", new { user_id, view });
-        }
+        await Client.MakeJsonCall(
+            action, 
+            new { user_id = userId, view_id = view?.ID, view = obj });
     }
 }
