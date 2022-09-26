@@ -25,7 +25,7 @@ public class CounterScenario
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "count",
             Count,
             Array.Empty<string>(),
@@ -34,7 +34,7 @@ public class CounterScenario
                 new IntParameter("from"),
                 new LabelParameter("tlabel", "to", true),
                 new IntParameter("to")
-            });
+            }));
 
         var context = new ActionContext
         {

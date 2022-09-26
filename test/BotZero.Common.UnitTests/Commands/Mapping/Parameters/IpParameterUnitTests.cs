@@ -42,13 +42,13 @@ public class IpParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new IpParameter("ip")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -78,13 +78,13 @@ public class IpParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new IpParameter("ip")
-            });
+            }));
 
         var context = new ActionContext
         {

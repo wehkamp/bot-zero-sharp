@@ -1,5 +1,4 @@
-﻿using BotZero.Common.Commands.Mapping.Parameters;
-using Mapster;
+﻿using Mapster;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -34,24 +33,6 @@ internal class Command
         return this;
     }
 
-    internal Command AddAction(string name, Func<ActionContext, Task> action, params string[] alias)
-    {
-        _commands.Add(new CommandAction(name, action, alias, null));
-        return this;
-    }
-
-    internal Command AddAction(string name, Func<ActionContext, Task> action, string[] alias, IParameter[]? parameters)
-    {
-        _commands.Add(new CommandAction(name, action, alias, parameters));
-        return this;
-    }
-
-    internal Command AddAction(string name, Func<ActionContext, Task> action, params IParameter[]? parameters)
-    {
-        _commands.Add(new CommandAction(name, action, Array.Empty<string>(), parameters));
-        return this;
-    }
-
     internal string[] GetActionNames()
     {
         return _commands.SelectMany(x => x.GetActionNames()).ToArray();
@@ -62,23 +43,39 @@ internal class Command
         if (!_regex.IsMatch(context.Message))
             return false;
 
-        // strip tool from message
+        var commandMapper = context.CommandMapper;
+
         context = context.Adapt<ActionContext>();
-        context.Message = _regex.Replace(context.Message, "");
         context.Values = new Dictionary<string, object?>();
         context.Command = this;
 
-        foreach (var command in _commands)
+        // strip command name (or alias) from message
+        context.Message = _regex.Replace(context.Message, "");
+
+        try
         {
-            if (await command.Process(context))
+            foreach (var command in _commands)
             {
-                return true;
+                if (await command.Process(context))
+                {
+                    return true;
+                }
             }
         }
-
-        if (context.CommandMapper != null)
+        catch (NotAuthorizedException naex)
         {
-            await context.CommandMapper.Reply(context, _invalidActionText);
+            if (commandMapper != null)
+            {
+                var msg = $"Sorry, you are not authorized to execute `{naex.CommandName.ToLower()}.{naex.ActionName.ToLower()}`.";
+                await commandMapper!.Reply(context, msg);
+            }
+
+            return true;
+        }
+
+        if (commandMapper != null)
+        {
+            await commandMapper.Reply(context, _invalidActionText);
         }
 
         return false;

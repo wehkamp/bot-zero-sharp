@@ -27,14 +27,14 @@ public class LabelParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new LabelParameter("item1", item1),
                 new LabelParameter("item2", item2)
-            });
+            }));
 
         var context = new ActionContext
         {

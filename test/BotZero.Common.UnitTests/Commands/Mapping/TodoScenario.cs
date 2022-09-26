@@ -39,9 +39,9 @@ public class TodoScenario
             }
 
             tool = new Command("todo");
-            tool.AddAction("add", Add, new string[] { "" }, new IParameter[] { new RestParameter("item") });
-            tool.AddAction("remove", Remove, new string[] { "rm", "del" }, new IParameter[] { new RestParameter("item") });
-            tool.AddAction("list", List, "", "lst", "ls");
+            tool.AddAction(new CommandAction("add", Add, new string[] { "" }, new IParameter[] { new RestParameter("item") }));
+            tool.AddAction(new CommandAction("remove", Remove, new string[] { "rm", "del" }, new IParameter[] { new RestParameter("item") }));
+            tool.AddAction(new CommandAction("list", List, new string[] { "", "lst", "ls" }));
         }
     }
 

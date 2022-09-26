@@ -22,14 +22,14 @@ public class IntParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new IntParameter("item1"),
                 new IntParameter("item2")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -85,13 +85,13 @@ public class IntParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new IntParameter("item1")
-            });
+            }));
 
         var context = new ActionContext
         {

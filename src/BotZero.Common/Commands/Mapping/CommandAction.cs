@@ -24,7 +24,12 @@ internal class CommandAction
     private Regex? _commandRegex;
     private Regex? _parameterRegex;
 
-    internal CommandAction(string name, Func<ActionContext, Task> action, string[]? alias, IParameter[]? parameters)
+    internal CommandAction(string name, Func<ActionContext, Task> action, params string[] alias) : this(name, action, alias, new IParameter[0])
+    {
+
+    }
+
+    internal CommandAction(string name, Func<ActionContext, Task> action, string[]? alias, params IParameter[]? parameters)
     {
         if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
         Name = name;
@@ -76,7 +81,7 @@ internal class CommandAction
 
         // validate parameters
         if (_parameterRegex == null)
-            _parameterRegex = CreateParameterRegex(context);
+            _parameterRegex = CreateParameterRegex();
 
         match = _parameterRegex.Match(message);
         if (!match.Success) return false;
@@ -99,7 +104,7 @@ internal class CommandAction
         return true;
     }
 
-    private Regex CreateParameterRegex(ActionContext context)
+    private Regex CreateParameterRegex()
     {
         var bob = new StringBuilder();
         bob.Append('^');

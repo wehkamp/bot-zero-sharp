@@ -27,7 +27,7 @@ public class TodoWithAutoCommandMapperScenario
 
         [Action("")]
         protected Task Add(
-            [RestParameter]
+            [RestParameter()]
             string item)
         {
             lastInvoked = "add";

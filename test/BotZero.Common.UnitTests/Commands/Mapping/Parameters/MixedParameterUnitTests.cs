@@ -22,7 +22,7 @@ public class MixedParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
@@ -33,7 +33,7 @@ public class MixedParameterUnitTests
                 new LabelParameter("item4","feels like"),
                 new ChoiceParameter("item5", new []{"home","school"}),
                 new RestParameter("item6")
-            }); ;
+            }));
 
         var context = new ActionContext
         {

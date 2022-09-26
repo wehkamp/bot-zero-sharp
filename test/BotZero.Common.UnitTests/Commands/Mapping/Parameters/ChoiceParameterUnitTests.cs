@@ -21,13 +21,13 @@ public class ChoiceParameterUnitTests
         var tool = new Command("it");
         ActionContext? cmc = null;
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "is",
             cm => { cmc = cm; return Task.CompletedTask; },
             Array.Empty<string>(),
             new IParameter[] {
                 new ChoiceParameter("item1", new[]{ "raining", "dripping", "drizzling", "raining cats and dogs" }, "raining"),
-            });
+            }));
 
         var context = new ActionContext
         {

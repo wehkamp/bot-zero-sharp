@@ -13,11 +13,11 @@ public class CommandUnitTests
     {
         var tool = new Command("todo");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "rem",
             cm => Task.CompletedTask,
             new[] { "del" },
-            new[] { new RestParameter("item") });
+            new[] { new RestParameter("item") }));
 
         var context = new ActionContext
         {

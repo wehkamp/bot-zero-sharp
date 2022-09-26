@@ -5,6 +5,7 @@ using BotZero.Slack.Common.Commands;
 using Mapster;
 using Slack.NetStandard;
 using System.Reflection;
+using static BotZero.Common.Slack.SlackProfileService;
 
 namespace BotZero.Common.Commands.Mapping;
 
@@ -36,22 +37,22 @@ public abstract class CommandMapper : CommandBase
 
     internal Command Create()
     {
-        // determine name of the tool
-        var name = GetType().GetCustomAttribute<CommandAttribute>(true)?.Name;
-        if (string.IsNullOrEmpty(name))
+        // determine name of the command
+        var commandName = GetType().GetCustomAttribute<CommandAttribute>(true)?.Name;
+        if (string.IsNullOrEmpty(commandName))
         {
-            name = GetType().Name.Replace("Command", "").ToLower();
+            commandName = GetType().Name.Replace("Command", "").ToLower();
         }
 
         var hasHelp = GetHelpLines().FirstOrDefault() != null;
-        var invalidActionText = hasHelp ? $"Sorry, I don't understand. Ask `help {name}` for more information." : "Sorry, I don't understand.";
-        var command = new Command(name, invalidActionText);
+        var invalidActionText = hasHelp ? $"Sorry, I don't understand. Ask `help {commandName}` for more information." : "Sorry, I don't understand.";
+        var command = new Command(commandName, invalidActionText);
         var actions = GetActionMethods();
 
         // parse methods into commands
         foreach (var (method, attribute) in actions)
         {
-            name = method.Name;
+            var actionName = method.Name;
             var parameters = new List<IParameter>();
 
             foreach (var p in method.GetParameters())
@@ -82,8 +83,8 @@ public abstract class CommandMapper : CommandBase
             }
 
             command.AddAction(new CommandAction(
-                name,
-                cm => Invoke(method, cm, name),
+                actionName,
+                cm => Invoke(method, cm, actionName, commandName),
                 attribute.Alias,
                 parameters.ToArray()
             ));
@@ -98,13 +99,19 @@ public abstract class CommandMapper : CommandBase
     /// <param name="method">The method.</param>
     /// <param name="context">The context.</param>
     /// <param name="actionName">The name of the action.</param>
-    private async Task Invoke(MethodInfo method, ActionContext context, string actionName)
+    /// <param name="actionName">The name of the command.</param>
+    private async Task Invoke(MethodInfo method, ActionContext context, string actionName, string commandName)
     {
-        var values = context.Values.Select(x => x.Value).ToList();
-
         Context = context.Adapt<ActionContext>();
         Context.CommandMapper = this;
         Context.ActionName = actionName;
+
+        if (!await Authorize(method, context.User))
+        {
+            throw new NotAuthorizedException(commandName, actionName);
+        }
+
+        var values = context.Values.Select(x => x.Value).ToList();
 
         var firstParameter = method.GetParameters().FirstOrDefault();
         if (firstParameter?.ParameterType.IsAssignableFrom(typeof(ActionContext)) == true)
@@ -116,6 +123,25 @@ public abstract class CommandMapper : CommandBase
         {
             await task;
         }
+    }
+
+    private async Task<bool> Authorize(MethodInfo method, SlackUser? user)
+    {
+        // class authorization
+        var auth = GetCustomAttributeImplementation<IAuthorizationAttribute>(GetType());
+        if (auth != null && !await auth.Authorize(user))
+        {
+            return false;
+        }
+
+        // method autorization
+        auth = GetCustomAttributeImplementation<IAuthorizationAttribute>(method);
+        if (auth != null && !await auth.Authorize(user))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -168,7 +194,6 @@ public abstract class CommandMapper : CommandBase
 
         if (yieldDefault)
         {
-
             // if no action methods are found, search for the default
             // Callback method and return it with an empty alias:
             var callback = GetType().GetMethod("Callback", _commandMethodBindingFlags);
@@ -179,10 +204,11 @@ public abstract class CommandMapper : CommandBase
         }
     }
 
-    public static T? GetCustomAttributeImplementation<T>(ParameterInfo info) where T : class
+    public static T? GetCustomAttributeImplementation<T>(ICustomAttributeProvider info) where T : class
     {
         return info
             .GetCustomAttributes(true)
             .FirstOrDefault(x => x.GetType().IsAssignableTo(typeof(T))) as T;
     }
 }
+

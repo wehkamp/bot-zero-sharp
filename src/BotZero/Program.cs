@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 // init Slack config
 builder.Services.ConfigureAndValidate<SlackConfiguration>("Slack", builder.Configuration);
 
-
 // init slack bot
 builder.Services.AddChatBot();
 

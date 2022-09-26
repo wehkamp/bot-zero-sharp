@@ -22,14 +22,14 @@ public class StringParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new StringParameter("item1"),
                 new StringParameter("item2")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -78,13 +78,13 @@ public class StringParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new StringParameter("item1")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -117,13 +117,13 @@ public class StringParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new StringParameter("item1", "hi")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -150,14 +150,14 @@ public class StringParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new StringParameter("item1"),
                 new StringParameter("item2", "hi")
-            });
+            }));
 
         var context = new ActionContext
         {
@@ -185,14 +185,14 @@ public class StringParameterUnitTests
 
         var tool = new Command("test");
 
-        tool.AddAction(
+        tool.AddAction(new CommandAction(
             "now",
             Add,
             Array.Empty<string>(),
             new IParameter[] {
                 new StringParameter("item1", "h1"),
                 new StringParameter("item2", "h2")
-            });
+            }));
 
         var context = new ActionContext
         {
