@@ -11,6 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Handlers\Templates\AppHome2.json.hbs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" Version="1.2.1" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Slack.NetStandard" Version="5.2.0-beta5" />
   </ItemGroup>

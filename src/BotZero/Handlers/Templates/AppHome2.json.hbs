@@ -1,0 +1,72 @@
+﻿    {
+      "type": "home",
+      "callback_id": "home",
+      "blocks": [
+    {{#unless skipHeader}}
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "KeesTalksTech Blog Search"
+          }
+        },
+        {
+          "type": "input",
+          "dispatch_action": true,
+          "element": {
+            "type": "plain_text_input",
+            "action_id": "query",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "Filter help..."
+             },
+            "initial_value": "{{query}}"
+          },
+          "label": {
+            "type": "plain_text",
+            "text": " ",
+            "emoji": true
+           }
+        },
+        {
+          "type": "divider"
+        },
+    {{/unless}}
+    {{#if items}}
+    {{#each items}}
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "📰 *<{{url}}|{{title}}>*\n{{excerpt}}"
+          },
+          "accessory": {
+            "type": "image",
+            "image_url": "{{image}}",
+            "alt_text": "Feature image"
+          }
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "plain_text",
+              "text": "{{#if categories}}Tags: {{#each categories}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}"
+            }
+          ]
+        }{{#unless @last}},
+        {
+          "type": "divider"
+        },{{/unless}}
+    {{/each}}
+    {{else}}
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "_Nothing matched `{{query}}`_"
+          }
+        }
+    {{/if}}
+      ]
+    }
